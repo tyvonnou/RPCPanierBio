@@ -30,7 +30,7 @@ struct gestionCompte {compte uncompte; compte mescomptes[10];};
 program MARCHE_PROG{
 	version MARCHE_VERSION_1{
   /* Inscrit un utilisateur */
-	void INSCRIPTION(compte) = 1;
+	compte INSCRIPTION(compte) = 1;
   /* Connecte un utilisateur, retourne le compte correspondant */
 	compte CONNEXION(compteConnexion) = 2;
   /* Ajoute un article */

@@ -12,9 +12,10 @@ int indexarticle = 0, compteactif = 0;
 int indexcommande = 0;
 
 // Gestion de l'inscription
-void *
+compte *
 inscription_1_svc(compte *compte, struct svc_req *rqstp)
 {
+	int i;
 	static char * result;
 	if(magestionCompte.mescomptes[0].email == '\0'){
 			printf("init\n");
@@ -31,6 +32,13 @@ inscription_1_svc(compte *compte, struct svc_req *rqstp)
 			}
 			// Si l'email est valable je continue
 			if (compte->email[0] != '\0') {
+				for(i=0;i<3;i++){
+					if((strcmp(magestionCompte.mescomptes[i].email, compte->email) == 0)){
+						compte->type = -8;
+						compte->password[0] = '\0';
+						printf("ERREUR: Doublons email inscription\n");
+					}
+				}
 				if (compte->password[0] != '\0') {
 					if (compte->adresse[0] != '\0') {
 						// Allocations
@@ -68,7 +76,7 @@ inscription_1_svc(compte *compte, struct svc_req *rqstp)
 		// Erreur si mauvais type
 		printf("Erreur : Le type n'est pas valide, 1 = client, 2 = fournisseur, 3 = point relais\n");
 	}
-		return (void *) &result;
+		return compte;
 	}
 
 

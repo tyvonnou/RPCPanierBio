@@ -19,6 +19,7 @@ article thon;
 article tofu;
 // Les comptes, avant et après connection
 compte  moncompte;
+compte moncomptetest;
 compte  moncompteCo;
 // Les commandes
 commande macommande;
@@ -36,10 +37,13 @@ void mesCommandes_init(commandes * mesCommandes){
 
   }
 }
-
-
-void note(livraison livraison){
-
+// Fonction qui fait un flush
+void purger(void)
+{
+   char c;
+   while((c=getchar()) != '\n' && c != EOF)
+   {
+   }
 }
 
 // Gestion de mon caddie
@@ -72,18 +76,20 @@ gestionArticle monCaddie(
     printf("[0] <- Retour\n");
     printf("Code : ");
     scanf("%d", &reponse);
+    // Si le produit n'existe pas je l'identifie pour ne pas faire une fausse suppression
     if(strcmp(moncompteCo.monCaddie.mesArticles[reponse - 1].nom,"")  == 0){
       sup =1;
     } else{
       sup = 0;
     }
-
+    // En fonction de l'utilisateur
     switch (reponse) {
       // Retour
       case 0:
         strcpy(deletecaddie.unArticle.nom, "NON");
         return deletecaddie;
         break;
+        // suprimer l'article n°1
       case 1:
         strcpy(deletecaddie.moncaddie.mesArticles[reponse - 1].nom, "asup");
         if(strcmp(moncompteCo.monCaddie.mesArticles[reponse - 1].nom,"") !=0){
@@ -94,6 +100,7 @@ gestionArticle monCaddie(
         }
         return deletecaddie;
         break;
+        // Supprimer l'article n°2
       case 2:
         strcpy(deletecaddie.moncaddie.mesArticles[reponse - 1].nom, "asup");
         if(strcmp(moncompteCo.monCaddie.mesArticles[reponse - 1].nom,"") !=0){
@@ -104,6 +111,7 @@ gestionArticle monCaddie(
         }
         return deletecaddie;
         break;
+        // Supprimer l'article n°3
       case 3:
         strcpy(deletecaddie.moncaddie.mesArticles[reponse - 1].nom, "asup");
         if(strcmp(moncompteCo.monCaddie.mesArticles[reponse - 1].nom,"") !=0){
@@ -114,6 +122,7 @@ gestionArticle monCaddie(
         }
         return deletecaddie;
         break;
+        // Ou mauvaise instruction
       default:
         printf("\033[1;33m");
         printf("ATTENTION : Mauvais code\n");
@@ -128,7 +137,7 @@ gestionArticle lesformules(){
   int i;
   gestionArticle  ajoutcaddie;
   int reponse = 1;
-
+    // J'initialise les articles
     strcpy(ppb.nom, "Petit P");
 		strcpy(ppb.description, "Petit!");
 		ppb.prix = 16;
@@ -138,7 +147,7 @@ gestionArticle lesformules(){
 		strcpy(gpb.nom, "Grand P");
 		strcpy(gpb.description, "Panier !");
     gpb.prix = 30;
-
+    // J'initialise formules avec mes articles
     strcpy(formules.mesArticles[0].nom, ppb.nom);
     strcpy(formules.mesArticles[0].description, ppb.description);
     formules.mesArticles[0].prix = ppb.prix;
@@ -150,7 +159,7 @@ gestionArticle lesformules(){
 		strcpy(formules.mesArticles[2].nom, gpb.nom);
     strcpy(formules.mesArticles[2].description, gpb.description);
     formules.mesArticles[2].prix = gpb.prix;
-
+    // Affichage
     for(i=0;i<3;i++){
       printf("\n");
       printf("\033[1;36m");
@@ -158,18 +167,25 @@ gestionArticle lesformules(){
       printf("\033[0;0m");
       printf("%s \n", formules.mesArticles[i].description);
       printf("\033[1;33m");
-      printf("%.2f \n", formules.mesArticles[i].prix);
+      printf("%.2f €\n", formules.mesArticles[i].prix);
       printf("\033[0;0m");
       printf("______________________________________\n");
     }
-
+    // En fonction de l'utilisateur
     while(reponse != 0){
       printf("Merci de selectionner le panier souhaité, code [0] pour retourner au menu\n");
       printf("Ajouter au caddie le code : ");
-      scanf("%d", &reponse);
+      while(scanf("%d", &reponse) != 1){
+        printf("\033[1;31m");
+        printf("Merci de rentrer un code valide !\n");
+        printf("\033[0;0m");
+        printf("Code : ");
+      };
       switch (reponse) {
+        // Quitter
         case 0:
           break;
+        // Ajouter l'article 1
         case 1:
           strcpy(ajoutcaddie.unArticle.nom, formules.mesArticles[0].nom);
           strcpy(ajoutcaddie.unArticle.description, formules.mesArticles[0].description);
@@ -177,6 +193,7 @@ gestionArticle lesformules(){
           ajoutcaddie.moncaddie = moncompteCo.monCaddie;
           return ajoutcaddie;
           break;
+        // Ajouter l'article 2
         case 2:
           strcpy(ajoutcaddie.unArticle.nom, formules.mesArticles[1].nom);
           strcpy(ajoutcaddie.unArticle.description, formules.mesArticles[1].description);
@@ -184,6 +201,7 @@ gestionArticle lesformules(){
           ajoutcaddie.moncaddie = moncompteCo.monCaddie;
           return ajoutcaddie;
           break;
+        // Ajouter l'article 3
         case 3:
           strcpy(ajoutcaddie.unArticle.nom, formules.mesArticles[2].nom);
           strcpy(ajoutcaddie.unArticle.description, formules.mesArticles[2].description);
@@ -191,6 +209,7 @@ gestionArticle lesformules(){
           ajoutcaddie.moncaddie = moncompteCo.monCaddie;
           return ajoutcaddie;
           break;
+        // Mauvais code
         default:
           printf("\033[1;33m");
           printf("ATTENTION : Mauvais code\n");
@@ -205,7 +224,7 @@ gestionArticle lesformules(){
     int i;
     gestionArticle  ajoutcaddie;
     int reponse = 1;
-
+      // J'initialise les produits individuels
       strcpy(pomme.nom, "Pomme");
   		strcpy(pomme.description, "pomme !");
   		pomme.prix = 0.30;
@@ -215,7 +234,7 @@ gestionArticle lesformules(){
   		strcpy(tofu.nom, "Tofu");
   		strcpy(tofu.description, "Tofu !");
       tofu.prix = 5.57;
-
+      // Je renseigne les produits individuels
       strcpy(prodindv.mesArticles[0].nom, pomme.nom);
       strcpy(prodindv.mesArticles[0].description, pomme.description);
       prodindv.mesArticles[0].prix = pomme.prix;
@@ -227,7 +246,7 @@ gestionArticle lesformules(){
   		strcpy(prodindv.mesArticles[2].nom, tofu.nom);
       strcpy(prodindv.mesArticles[2].description, tofu.description);
       prodindv.mesArticles[2].prix = tofu.prix;
-
+      // Affichage
       for(i=0;i<3;i++){
         printf("\n");
         printf("\033[1;36m");
@@ -239,11 +258,18 @@ gestionArticle lesformules(){
         printf("\033[0;0m");
         printf("______________________________________\n");
       }
-
+      // En fonction de l'utilisateur
       while(reponse != 0){
         printf("Merci de selectionner le produit souhaité, code [0] pour retourner au menu\n");
         printf("Ajouter au caddie le code : ");
-        scanf("%d", &reponse);
+        purger();
+        while(scanf("%d", &reponse) != 1){
+          purger();
+          printf("\033[1;31m");
+          printf("Merci de rentrer un code valide !\n");
+          printf("\033[0;0m");
+          printf("Code : ");
+        };
         switch (reponse) {
           case 0:
             break;
@@ -277,14 +303,6 @@ gestionArticle lesformules(){
       }
   }
 
-void purger(void)
-{
-   char c;
-   while((c=getchar()) != '\n' && c != EOF)
-   {
-   }
-}
-
 // programme principal
 void
 marche_prog_1(char *host)
@@ -295,7 +313,7 @@ marche_prog_1(char *host)
   gestionArticle  ajoutcaddie, delecaddie;
   int reponse = 1;
 	CLIENT *clnt;
-	void  *inscrit_result;
+	compte  *inscrit_result;
 	compte  *connexion_result;
 	compteConnexion  arguments_connexion;
 	caddie  *result_4;
@@ -320,7 +338,7 @@ marche_prog_1(char *host)
   printf("Bienvenue sur Panier Bio !\n");
   printf("\033[0;0m");
   moncompteCo.type = 4;
-
+// Affichage
 while(reponse != 0){
     printf("\n");
   if(moncompteCo.type == 4){
@@ -328,8 +346,16 @@ while(reponse != 0){
     printf("[1] -> Inscription\n");
     printf("[2] -> Connection\n");
     printf("Code : ");
-    scanf("%d", &reponse);
+    while(scanf("%d", &reponse) != 1){
+      purger();
+      printf("\033[1;31m");
+      printf("Merci de rentrer un code valide !\n");
+      printf("\033[0;0m");
+      printf("Code : ");
+    };
+    // La réponse de l'utilisateur
     switch (reponse) {
+      // L'inscription
       case 1:
         printf("\n");
         printf("\033[1;32m");
@@ -340,7 +366,13 @@ while(reponse != 0){
         printf("[2] -> Fournisseur\n");
         printf("[3] -> Point-Relais\n");
         printf("Code : ");
-      	scanf("%d", &moncompte.type);
+        while(scanf("%d", &moncompte.type) != 1){
+          purger();
+          printf("\033[1;31m");
+          printf("Merci de rentrer un code valide !\n");
+          printf("\033[0;0m");
+          printf("Code : ");
+        };
 
       	if(moncompte.type == 1){
       		printf("Prénom : ");
@@ -364,13 +396,25 @@ while(reponse != 0){
       	if (inscrit_result == (void *) NULL) {
       		clnt_perror (clnt, "Inscription call failed");
       	}
-        printf("\033[1;32m");
-        printf("Inscription effectuée, merci de vous connecter\n");
-        printf("\033[0;0m");
+        // Je le récupère pour tester si il n'y a pas de doublons
+        moncomptetest = *inscrit_result;
+        if(moncomptetest.type != -8){
+          printf("\033[1;32m");
+          printf("Inscription effectuée, merci de vous connecter\n");
+          printf("\033[0;0m");
+        } else {
+          printf("\033[1;31m");
+          printf("ERREUR : Cet Email existe déjà !\n");
+          printf("\033[0;0m");
+        }
         break;
-
+      // La connnexion
       case 2:
-        printf("Connexion  : Email : ");
+        printf("\033[1;32m");
+        printf("\nConnexion\n");
+        printf("\033[0;0m");
+        printf("Email : ");
+        printf("\033[0;0m");
         scanf("%s", arguments_connexion.email);
         printf("Mot de passe : ");
         scanf("%s", arguments_connexion.password);
@@ -379,6 +423,7 @@ while(reponse != 0){
         if (connexion_result == (compte *) NULL) {
           clnt_perror (clnt, "Connexion call failed");
         }
+
         strcpy(moncompteCo.adresse, connexion_result->adresse);
         strcpy(moncompteCo.nom, connexion_result->nom);
         strcpy(moncompteCo.prenom, connexion_result->prenom);
@@ -396,13 +441,13 @@ while(reponse != 0){
           printf("\033[0;0m");
         }
         break;
-
+      // Quitter
       case 0:
         printf("\033[1;32m");
-        printf("Merci d'avoir utilisé Panier Bio, ciao !\n");
+        printf("Merci d'avoir utilisé PanierBio, ciao !\n");
         printf("\033[0;0m");
         break;
-
+      // Si c'est un autre code
       default:
         printf("\033[1;33m");
         printf("ATTENTION : Mauvais code\n");
@@ -410,7 +455,7 @@ while(reponse != 0){
         break;
     }
   }
-
+  // Si il est connecté
   if(moncompteCo.type != 4){
     printf("\033[1;32m");
     printf("\n");
@@ -430,8 +475,9 @@ while(reponse != 0){
        printf("Code : ");
     };
 
-
+    // Choix de l'utilisateur
     switch (reponse) {
+      // Ajouter les paniers
       case 1:
         if (indexarticle < 3) {
           ajoutcaddie = lesformules();
@@ -456,6 +502,7 @@ while(reponse != 0){
           printf("\033[0;0m");
         }
         break;
+      // Ajouter produit individuels
       case 2:
         if (indexarticle < 3) {
           ajoutcaddie = lesprodindv();
@@ -480,6 +527,7 @@ while(reponse != 0){
           printf("\033[0;0m");
         }
         break;
+      // Affichage du caddie
       case 3:
         delecaddie = monCaddie();
         if (strcmp(delecaddie.unArticle.nom, "NON") != 0){
@@ -496,7 +544,7 @@ while(reponse != 0){
           if(sup != 1)indexarticle --;
         }
         break;
-
+      // Renseignments bancaires
       case 4:
         printf("\033[1;32m");
         printf("\nRenseignements bancaires : \n");
@@ -504,13 +552,25 @@ while(reponse != 0){
         printf("\nMerci de renseigner votre carte bancaire :\n");
         printf("Par mesure de sécurité elle ne sera pas enregistré\n\n");
         printf("Numéro : ");
-        scanf("%d",&cartebleu.numerocarte);
+        while (scanf("%d",&cartebleu.numerocarte) != 1) {
+          purger();
+          printf("\033[1;31m");
+          printf("Merci de rentrer un numéro de carte valide !\n");
+          printf("\033[0;0m");
+          printf("Code : ");
+        };
         printf("Titulaire : ");
         scanf("%s",cartebleu.nom);
         printf("Date d'expiration : ");
         scanf("%s",cartebleu.dateexp);
         printf("Sécurité : ");
-        scanf("%d",&cartebleu.numerosecu);
+        while(scanf("%d",&cartebleu.numerosecu) != 1){
+          purger();
+          printf("\033[1;31m");
+          printf("Merci de rentrer un code de sécurité valide !\n");
+          printf("\033[0;0m");
+          printf("Code : ");
+        };
         result_5 = 0;
         result_5 = payement_1(&cartebleu, clnt);
     	  if (result_5 == (int *) NULL) {
@@ -535,8 +595,9 @@ while(reponse != 0){
         printf("Merci la commande est en attente de confirmation\n");
         printf("Une proposition de date et d'heure vous sera proposé en prenant en compte vos demandes\n");
         for(i =0;i<3;i++){
+          strcpy(gestionCommande.listelivraison[i].date, mesCommandes.mesLivraison[i].date);
+
               if(mesCommandes.mesLivraison[i].date[0] != '\0'){
-                strcpy(gestionCommande.listelivraison[i].date, mesCommandes.mesLivraison[i].date);
                 gestionCommande.listelivraison[i].destination = mesCommandes.mesLivraison[i].destination;
                 strcpy(gestionCommande.listelivraison[i].horaire, mesCommandes.mesLivraison[i].horaire);
                 for(j=0;j<3;j++){
@@ -581,7 +642,7 @@ while(reponse != 0){
             }
             printf("Date : %s, %s\n", mesCommandes.mesLivraison[i].date, mesCommandes.mesLivraison[i].horaire);
             printf("\033[1;33m");
-            printf("Prix : %2.f €\n", total);
+            printf("Prix : %2.2f €\n", total);
             printf("\033[0;0m");
 
           } else if(i==0){
